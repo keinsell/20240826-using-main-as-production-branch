@@ -4,6 +4,7 @@ use serde::Serialize;
 mod ingestion;
 pub mod list_ingestion;
 pub mod log_ingestion;
+pub mod update_ingestion;
 
 #[derive(
     clap::ValueEnum, Debug, Clone, Copy, Default, PartialEq, Serialize, Deserialize, Eq, Hash,
@@ -37,6 +38,7 @@ pub enum IngestionCommands
 {
     Log(log_ingestion::LogIngestion),
     List(list_ingestion::ListIngestion),
+    Update(update_ingestion::UpdateIngestion),
 }
 
 #[cfg(test)]

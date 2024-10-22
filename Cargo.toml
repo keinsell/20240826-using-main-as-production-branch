@@ -56,6 +56,7 @@ sea-orm = { version = "1.1.0-rc.1", features = [
     "with-chrono",
 ] }
 openssl = { version = "0.10", features = ["vendored"] }
+uom = "0.36.0"
 
 [dependencies.clap]
 features = [
@@ -101,18 +102,6 @@ predicates = "3.0.1"
 
 [workspace]
 members = []
-
-[workspace.dependencies.libsqlite3-sys]
-features = ["bundled"]
-version = "0.30.1"
-
-[workspace.dependencies.openssl]
-features = ["vendored"]
-version = "0.10"
-
-[workspace.dependencies.sqlite3-src]
-features = ["bundled"]
-version = "0.30.1"
 
 [workspace.dev-dependencies]
 assert_cmd = "2.0.1"

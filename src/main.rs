@@ -19,6 +19,7 @@ mod logger;
 mod settings;
 mod ui;
 
+use ingestion::update_ingestion::UpdateIngestion;
 #[derive(Parser)]
 #[command(
     version = env!("CARGO_PKG_VERSION"),
@@ -39,6 +40,7 @@ enum Commands
 {
     LogIngestion(ingestion::log_ingestion::LogIngestion),
     ListIngestion(ingestion::list_ingestion::ListIngestion),
+    UpdateIngestion(UpdateIngestion),
 }
 
 fn main()
@@ -83,11 +85,11 @@ fn main()
 
     match &cli.command
     {
-        | Some(Commands::LogIngestion(log_ingestion)) =>
-        {
+        Some(Commands::LogIngestion(log_ingestion)) => {
             log_ingestion.handle(db_connection).unwrap()
         }
-        | Some(Commands::ListIngestion(command)) => task::block_on(command.handle(db_connection)),
-        | _ => println!("No command provided"),
+        Some(Commands::ListIngestion(command)) => task::block_on(command.handle(db_connection)),
+        Some(Commands::UpdateIngestion(command)) => task::block_on(command.handle(db_connection)),
+        _ => println!("No command provided"),
     }
 }
