@@ -19,7 +19,7 @@ use tracing::Level;
 /// setup or things like that.
 
 #[derive(Parser, Debug)]
-#[command(version, about, long_about)]
+#[command(version, about = "List previously stored ingestions", long_about)]
 pub struct ListIngestion
 {
     #[arg(short = 's')]

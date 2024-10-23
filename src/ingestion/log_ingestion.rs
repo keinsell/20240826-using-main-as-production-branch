@@ -18,7 +18,7 @@ use tracing::instrument;
 use tracing::Level;
 
 #[derive(Parser, Debug)]
-#[command(version, about, long_about = None)]
+#[command(version, about = "Store information about new ingestion", long_about)]
 pub struct LogIngestion
 {
     #[arg(short = 's', long)]
