@@ -40,7 +40,7 @@ pub struct LogIngestion
                 value_parser=human_date_parser,
             )]
     pub ingestion_date: DateTime<Local>,
-    #[clap(short = 'r', long, default_value_t, value_enum)]
+    #[arg(short = 'r', long, default_value_t, value_enum)]
     pub route_of_administration: RouteOfAdministrationClassification,
 }
 

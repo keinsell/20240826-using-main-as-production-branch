@@ -9,6 +9,7 @@ use chrono_humanize::HumanTime;
 use tabled::Tabled;
 
 pub(super) type Entity = db::ingestion::Model;
+pub(super) type Repository = db::ingestion::Entity;
 
 #[derive(Tabled, Debug, Clone)]
 pub struct IngestionViewModel

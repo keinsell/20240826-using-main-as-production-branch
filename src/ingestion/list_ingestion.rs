@@ -1,6 +1,7 @@
 use crate::core::CommandHandler;
 use crate::db;
 use crate::ingestion::ingestion::IngestionViewModel;
+use crate::ingestion::ingestion::Repository;
 use async_std::task::block_on;
 use clap::Parser;
 use db::sea_orm::ColumnTrait;
@@ -32,7 +33,7 @@ impl CommandHandler for ListIngestion
     fn handle(&self, database_connection: &DatabaseConnection)
     {
         block_on(async {
-            let ingestions = db::ingestion::Entity::find()
+            let ingestions = Repository::find()
                 .apply_if(self.substance_name.clone(), |query, v| {
                     query.filter(db::ingestion::Column::SubstanceName.eq(v.clone()))
                 })

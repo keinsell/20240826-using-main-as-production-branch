@@ -7,6 +7,7 @@ use async_std::task;
 use clap::Parser;
 use clap::Subcommand;
 use db::migration::MigratorTrait;
+use ingestion::IngestionCommands;
 use miette::set_panic_hook;
 use sea_orm_migration::IntoSchemaManagerConnection;
 
@@ -21,6 +22,7 @@ mod settings;
 mod ui;
 
 use ingestion::update_ingestion::UpdateIngestion;
+
 #[derive(Parser)]
 #[command(
     version = env!("CARGO_PKG_VERSION"),
