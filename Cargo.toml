@@ -56,7 +56,7 @@ sea-orm = { version = "1.1.0-rc.1", features = [
     "with-chrono",
 ] }
 openssl = { version = "0.10", features = ["vendored"] }
-uom = "0.36.0"
+uom = { version = "0.36.0", features = ["f64", "si"] }
 
 [dependencies.clap]
 features = [
@@ -129,3 +129,4 @@ lto = true
 opt-level = "z"
 panic = "abort"
 strip = true
+

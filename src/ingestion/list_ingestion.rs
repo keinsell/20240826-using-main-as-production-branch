@@ -1,5 +1,7 @@
+use crate::core::CommandHandler;
 use crate::db;
 use crate::ingestion::ingestion::IngestionViewModel;
+use async_std::task::block_on;
 use clap::Parser;
 use db::sea_orm::ColumnTrait;
 use db::sea_orm::DatabaseConnection;
@@ -8,6 +10,7 @@ use db::sea_orm::QueryFilter;
 use db::sea_orm::QueryTrait;
 use tabled::Table;
 use tracing::instrument;
+use tracing::Level;
 
 /// Retrieve and list ingestion from database, this feature includes functionality
 /// of filtering and piping output to different formats such as listing ingestion
@@ -23,22 +26,24 @@ pub struct ListIngestion
     pub substance_name: Option<String>,
 }
 
-impl ListIngestion
+impl CommandHandler for ListIngestion
 {
     #[instrument(name="list_ingestion", level = Level::DEBUG)]
-    pub async fn handle(&self, database_connection: &DatabaseConnection) -> ()
+    fn handle(&self, database_connection: &DatabaseConnection)
     {
-        let ingestions = db::ingestion::Entity::find()
-            .apply_if(self.substance_name.clone(), |query, v| {
-                query.filter(db::ingestion::Column::SubstanceName.eq(v.clone()))
-            })
-            .all(database_connection)
-            .await
-            .unwrap();
+        block_on(async {
+            let ingestions = db::ingestion::Entity::find()
+                .apply_if(self.substance_name.clone(), |query, v| {
+                    query.filter(db::ingestion::Column::SubstanceName.eq(v.clone()))
+                })
+                .all(database_connection)
+                .await
+                .unwrap();
 
-        let view_models: Vec<IngestionViewModel> =
-            ingestions.iter().map(IngestionViewModel::from).collect();
+            let view_models: Vec<IngestionViewModel> =
+                ingestions.iter().map(IngestionViewModel::from).collect();
 
-        println!("{}", Table::new(view_models));
+            println!("{}", Table::new(view_models));
+        })
     }
 }

@@ -1,7 +1,7 @@
 use miette::Error;
 use sea_orm::DatabaseConnection;
 
-pub trait Command
+pub trait CommandHandler
 {
-    fn handle(&self, db: &DatabaseConnection) -> miette::Result<(), Error>;
+    fn handle(&self, db: &DatabaseConnection) -> ();
 }

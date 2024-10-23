@@ -1,6 +1,6 @@
 #![feature(error_reporter, async_fn_traits)]
 
-use crate::core::Command;
+use crate::core::CommandHandler;
 use crate::database::DATABASE_CONNECTION;
 use crate::settings::ensure_xdg_directories;
 use async_std::task;
@@ -13,6 +13,7 @@ use sea_orm_migration::IntoSchemaManagerConnection;
 mod core;
 mod database;
 mod db;
+mod dosage;
 mod humanize;
 mod ingestion;
 mod logger;
@@ -85,11 +86,8 @@ fn main()
 
     match &cli.command
     {
-        Some(Commands::LogIngestion(log_ingestion)) => {
-            log_ingestion.handle(db_connection).unwrap()
-        }
-        Some(Commands::ListIngestion(command)) => task::block_on(command.handle(db_connection)),
-        Some(Commands::UpdateIngestion(command)) => task::block_on(command.handle(db_connection)),
-        _ => println!("No command provided"),
+        | Some(Commands::LogIngestion(log_ingestion)) => log_ingestion.handle(db_connection),
+        | Some(Commands::ListIngestion(command)) => command.handle(db_connection),
+        | _ => println!("No command provided"),
     }
 }

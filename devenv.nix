@@ -4,34 +4,14 @@
 , inputs
 , ...
 }:
-  let libPath = with pkgs; lib.makeLibraryPath [
-    sqlite
-    openssl
-  ];
-  in
 {
   # https://devenv.sh/basics/
   env = {
     PROJECT = "neuronek-cli";
-    # RUSTC_WRAPPER = "sccache";
+    RUSTC_WRAPPER = "${pkgs.sccache}/bin/sccache";
     RUST_BACKTRACE = "full";
-    # LIBCLANG_PATH= pkgs.lib.makeLibraryPath [ pkgs.llvmPackages_latest.libclang.lib ];
-    # CARGO_LOG = "warn";
-    # SCCACHE_LOG = "warn";
-    # PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig";
-    # LD_LIBRARY_PATH = libPath;
-    # BINDGEN_EXTRA_CLANG_ARGS =
-    # # Includes with normal include path
-    # (builtins.map (a: ''-I"${a}/include"'') [
-    #   pkgs.libvmi
-    #   pkgs.glibc.dev
-    # ])
-    # # Includes with special directory paths
-    # ++ [
-    #   ''-I"${pkgs.llvmPackages_latest.libclang.lib}/lib/clang/${pkgs.llvmPackages_latest.libclang.version}/include"''
-    #   ''-I"${pkgs.glib.dev}/include/glib-2.0"''
-    #   ''-I${pkgs.glib.out}/lib/glib-2.0/include/''
-    # ];
+    CARGO_LOG = "warn";
+    SCCACHE_LOG = "warn";
   };
 
   dotenv = {
@@ -54,6 +34,8 @@
     nix-direnv
     nix-direnv-flakes
     sccache
+    buck2
+    ccache
     adrgen
     cargo-temp
     cargo-chef
@@ -74,7 +56,6 @@
     cargo-expand    
     earthly
     cargo-autoinherit
-    # pkg-config
     rustfilt
     sqlite
     llvmPackages.bintools
@@ -91,7 +72,8 @@
       upx
       candle
       dotnet-sdk
-      dotnet-runtime              
+      dotnet-runtime           
+      bacon   
       ];
 
   # https://devenv.sh/languages/
@@ -113,9 +95,6 @@
       ];
     };
     zig = {
-      enable = true;
-    };
-    dotnet = {
       enable = true;
     };
   };
@@ -143,8 +122,6 @@
 
   # https://devenv.sh/tests/
   enterTest = ''
-    echo "Running tests"
-    git --version | grep --color=auto "${pkgs.git.version}"
   '';
 
   # https://devenv.sh/pre-commit-hooks/

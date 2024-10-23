@@ -1,9 +1,10 @@
-use crate::core::Command;
+use crate::core::CommandHandler;
 use crate::db;
 use crate::humanize::human_date_parser;
-use crate::ingestion::RouteOfAdministrationClassification;
 use crate::ingestion::ingestion::IngestionViewModel;
+use crate::ingestion::RouteOfAdministrationClassification;
 use async_std::task;
+use async_std::task::block_on;
 use chrono::DateTime;
 use chrono::Local;
 use clap::Parser;
@@ -12,9 +13,9 @@ use db::sea_orm::EntityTrait;
 use miette::Error;
 use sea_orm::ActiveValue;
 use tabled::Table;
-use tracing::Level;
 use tracing::event;
 use tracing::instrument;
+use tracing::Level;
 
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
@@ -43,10 +44,10 @@ pub struct LogIngestion
     pub route_of_administration: RouteOfAdministrationClassification,
 }
 
-impl Command for LogIngestion
+impl CommandHandler for LogIngestion
 {
     #[instrument(name = "log_ingestion", level = Level::INFO)]
-    fn handle(&self, database_connection: &DatabaseConnection) -> Result<(), Error>
+    fn handle(&self, database_connection: &DatabaseConnection)
     {
         let ingestion = task::block_on(async {
             db::ingestion::Entity::insert(db::ingestion::ActiveModel {
@@ -67,8 +68,6 @@ impl Command for LogIngestion
 
         event!(Level::INFO, "Ingestion Logged {:?}", &ingestion);
         println!("{}", Table::new(vec![IngestionViewModel::from(&ingestion)]));
-
-        Ok(())
     }
 }
 
